@@ -1,0 +1,40 @@
+body{
+	background-color: black;
+}
+h1{
+	font-size: 36pt;
+	color: white;
+	font-family: "Thirsty Script Extrabold Demo", cursive;
+	text-align: center;
+}
+
+form{
+	vertical-align: top;
+	display: block;
+	color: white;
+	text-align: center;
+}
+label{
+	width: 125px;
+	padding-left: 45px;
+	display: block;
+	font-family: Calibri, Helvetica, Arial;
+	text-align: center;
+}
+
+.login, #request{
+	position: fixed;
+	margin-top: -50px;
+    margin-left: -100px;
+	left: 45%;
+	top: 25%;
+}
+#request{
+	width: 125px;
+	padding-left: 0;
+	text-align: left;
+}
+
+a{
+	color: white;
+}
