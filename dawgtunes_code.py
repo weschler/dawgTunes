@@ -1,6 +1,5 @@
 import webapp2, os, urllib, urllib2, json, logging
 import jinja2
-import myflickr_key
 
 JINJA_ENVIRONMENT = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
@@ -24,13 +23,16 @@ def safeGet(url):
 
 class Events:
 	def __init__(self, search):
-		self.
+		self.artists = search['artists']['name']
+        self.city = search['venue']['city']
+        self.date = search['']
+		self.url = "http://api.bandsintown.com/events/search.format?" + urllib.urlencode(search['artist']['name']) +  urllib.urlencode(search['venue']['city'])
 
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         template_values={}
-        template = JINJA_ENVIRONMENT.get_template('index.html')
+        template = JINJA_ENVIRONMENT.get_template('dawgtunes.html')
         self.response.write(template.render(template_values))
         
     def post(self):
