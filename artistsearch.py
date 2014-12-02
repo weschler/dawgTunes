@@ -18,8 +18,12 @@ def searchEvents(id, location, artist):
     if len(eventsData) == 0:
         print '%s is not coming to %s.' % (artist, location)
     else:
-        date = eventsData[0]['datetime']
-        print '%s will be in %s on %s.' % (artist, location, date)
+        time_and_date = eventsData[0]['datetime']
+        date = time_and_date[:10]
+        time = time_and_date[11:]
+        ticket = eventsData[0]['ticket_status']
+        venue = eventsData[0]['venue']['name']
+        print '%s will be in %s\n Date: %s \n Time: %s \n Ticket Status: %s \n Venue: %s' % (artist, location, date, time, ticket, venue)
    
 
 try:
