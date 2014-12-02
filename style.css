@@ -16,8 +16,9 @@ form{
 }
 label{
 	width: 125px;
-	padding-left: 45px;
-	display: block;
+	/*padding-left: 45px;*/
+	display: inline-block;
+	vertical-align: top;
 	font-family: Calibri, Helvetica, Arial;
 	text-align: center;
 }
@@ -36,5 +37,15 @@ label{
 }
 
 a{
+	color: white;
+}
+
+.class{
+	float: left;
+	width: 250px
+	background-color: gray;
+	border: white 3px;
+}
+p{
 	color: white;
 }
