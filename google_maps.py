@@ -9,6 +9,7 @@ def createURL(origin, destination, time, mode):
     base = 'https://maps.googleapis.com/maps/api/directions/json?origin=' + origin + '&destination=' + destination + '&key=' + api_key + '&departure_time=' + time + '&mode=' + mode 
     return base
 
+# print to test out whether the code is working properly 
 #print createURL(origin= 'Brooklyn', destination= 'Queens', time='1343641500', mode='transit')
 
 def searchDirections(origin, destination, time, mode):
@@ -23,14 +24,8 @@ def searchDirections(origin, destination, time, mode):
          print '%s could not be found.' % (destination)
      else:
         distance = directionData['routes'][0]['legs'][0]['distance']['text']
-        print 'The place is %s away.' % (distance)
-        
-            # if 'arrival_time' in directionData['routes'][0]['legs'][0]:
-            #     arrvial_time = directionData['routes'][0]['legs'][0]['arrvial_time']['text']
-            #     print 'You will arrive at %s.' % (arrvial_time)
-            # elif 'distance' in directionData['routes'][0]['legs'][0]:       
-            #     distance = directionData['routes'][0]['legs'][0]['distance']['text']
-            #     print 'The place is %s away.' % (distance)
+        print 'The %s is %s away from %s by %s.' % (origin, distance, destination, mode)
+
    
 searchDirections('Brooklyn','Queens', '1343641500', 'transit')
 
@@ -45,5 +40,12 @@ allMode = ['transit', 'walking', 'driving', 'bicycling']
 for mode in allMode: 
     searchDirections('Brooklyn','Queens', '1343641500', mode)
 
+        
+            # if 'arrival_time' in directionData['routes'][0]['legs'][0]:
+            #     arrvial_time = directionData['routes'][0]['legs'][0]['arrvial_time']['text']
+            #     print 'You will arrive at %s.' % (arrvial_time)
+            # elif 'distance' in directionData['routes'][0]['legs'][0]:       
+            #     distance = directionData['routes'][0]['legs'][0]['distance']['text']
+            #     print 'The place is %s away.' % (distance)
 
 #NOTE: convert time to epochtime 
