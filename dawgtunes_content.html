@@ -1,3 +1,4 @@
+import jinja2
 <!DOCTYPE html>
 
 <html>
@@ -16,12 +17,26 @@
 				</ul>
 			</div>
 		</div>
-
-		<form>
-			<label>Request</label><input type="text" name="title"></br>
-			<label>Date</label><input type="text" name="date"></br>
-			<label>Event Search</label><input type="text" name="search"><br>
+			
+		<form method="post">
+			<label>Event Search</label><input type="text" name="artist"><br>
+			<label>Location</label><input type="text" name="location"></br>
+			{% if results %}
+			<div id="result">
+			{{ template_values.results }}
+			{% endif %}
+			</div>
+			<label>Title of Request</label><input type="text" name="title"></br>
+			<label>Mode of Travel</label><select>
+			<option>Bicycling</option>
+			<option>Driving</option>
+			<option>Transit</option>
+			<option>Walking</option>
+		</select></br>
+			<label>Starting From:</label><input type="text" name="starting"><p>(Input your current city/address/coordinates)</p>
 			<label>Description</label><textarea rows="4" cols="50" name="request"></textarea></br>
+			<input type="submit" name="submit">
 		</form>
+		
 	</body>
 </html>

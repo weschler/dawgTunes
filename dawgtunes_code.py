@@ -22,71 +22,96 @@ def safeGet(url):
         return None
 
 def createDict(id, artist, location):
-		search_dict = {'app_id': id, 'artist': artist, 'location': location}
-		param = urllib.urlencode(search_dict)
-		search = 'http://api.bandsintown.com/events/search.json?artists[]=' + param
-		readEvents = urllib2.urlopen(search)
-		eventsData = json.loads(readEvents)
-		return eventsData
+    search_dict = {'app_id': id, 'location': location}
+    param = urllib.urlencode(search_dict)
+    search = 'http://api.bandsintown.com/events/search.json?artists[]=' + artist + '&' + param
+    readEvents = urllib2.urlopen(search).read()
+    eventsData = json.loads(readEvents)
+    return eventsData
 
 
 class Events:
-	def __init__(self, data):
-		#why does it keep saying that data is not defined?
-		self.artist = data['artists']['name']
-        self.city = data['venue']['city']
-        self.state = data['venue']['region']
-        self.venue = data['venue']['name']
-        self.datetime = data['datetime']
-        self.ticket = data['ticket_status']
+    def __init__(self, data):
+        self.artist = data[0]['artists'][0]['name']
+        self.city = data[0]['venue']['city']
+        self.state = data[0]['venue']['region']
+        self.venue = data[0]['venue']['name']
+        self.datetime = data[0]['datetime']
+        self.ticket = data[0]['ticket_status']
         self.id = 'dawgtunes'
 
-	def searchEvents(self):
-	     try:
-	         readEvents = urllib2.urlopen(createURL(self.id, self.city + ','+ self.state, self.artist)).read()
-	     except Exception:
-	         print 'did not reach server'
-	    eventList = []
-	    if len(data) == 0:
+    def searchEvents(self, data):        
+        location = self.city + ','+ self.state
+        search_dict = {'app_id': 'dawgtunes', 'location': location}
+        param = urllib.urlencode(search_dict)
+        search = 'http://api.bandsintown.com/events/search.json?artists[]=' + self.artist + '&' + param
+        try:
+	        search
+        except Exception:
+	        print 'did not reach server'
+
+		#eventList = []
+        if len(data) == 0:
 	        print '%s is not coming to %s.' % (artist, location)
-	    else:
+        else:
 	        # time_and_date = eventsData[0]['datetime']
 	        # date = time_and_date[:10]
 	        # time = time_and_date[11:]
 	        # ticket = eventsData[0]['ticket_status']
 	        # venue = eventsData[0]['venue']['name']
-	        newList = eventList.append('%s will be in %s\n Date: %s \n Time: %s \n Ticket Status: %s \n Venue: %s' % (self.artist, self.city, self.datetime[:10], self.datetime[11:], self.ticket, self.venue))
-	        return newList
+	        #eventList = eventList.append('%s will be in %s\n Date: %s \n Time: %s \n Ticket Status: %s \n Venue: %s' % (self.artist, self.city, self.datetime[:10], self.datetime[11:], self.ticket, self.venue))
+            return '%s will be in %s\n Date: %s \n Time: %s \n Ticket Status: %s \n Venue: %s' % (self.artist, self.city, self.datetime[:10], self.datetime[11:], self.ticket, self.venue)
 
-event = Events(createDict('dawgtunes', 'hozier', 'Seattle,WA'))		   
-print event.searchEvents()
+if __name__ == "__main__":
+    #print createDict('dawgtunes', "hozier", 'Seattle,WA')
+    info = createDict('dawgtunes', self.request.get('artist'), location)
+    event = Events(info)        
+    print event.searchEvents(info)
+#createDict('dawgtunes', self.request.get("search"), 'Seattle,WA')
+# event = Events(createDict('dawgtunes', "Hozier", 'Seattle,WA'))        
+# print event.searchEvents()
 #In app: create a for loop that will print the results in the list.
 
 class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        template_values={}
-        template = JINJA_ENVIRONMENT.get_template('dawgtunes.html')
-        self.response.write(template.render(template_values))
-        
     def post(self):
         template_values={}
-        if self.request.get("search",False):
-            search = self.request.get("search")
-            method = self.request.get("method")
-            #This needs to be built with the other dictionaries included: the Google Directions Api, etc. 
-            #see get_photos method to use for Google Directions to include here
-            template_values["query"] = search
-            results = searchEvents(search=search,method=method)
-            if results != None:
-                template_values["results"] = results
-            else:
-                template_values["message"] = "Sorry, no matching results."
-                template_values["results"] = []
-                
-        else:
-            template_values["message"] = "Please enter one or more tags for which to search."
-        
         template = JINJA_ENVIRONMENT.get_template('dawgtunes.html')
         self.response.write(template.render(template_values))
 
-application = webapp2.WSGIApplication([('/', MainHandler)], debug=True)
+class CreateHandler(webapp2.RequestHandler):
+    def post(self):
+        template_values={}
+        event = Events(createDict('dawgtunes', self.request.get('artist'), 'Seattle,WA'))        
+        if self.request.get("artist"):
+            artist = self.request.get("artist")
+            method = self.request.get("method")
+            location = self.request.get("location")
+            #This needs to be built with the other dictionaries included: the Google Directions Api, etc. 
+            #see get_photos method to use for Google Directions to include here
+            template_values["search"] = artist
+            results = event.searchEvents(search=artist,location=location)
+            if results != None:
+                template_values["results"] = results
+                print results
+            else:
+                template_values["message"] = "Sorry, no matching results."
+                template_values["results"] = ''
+                print template_values["message"]
+                
+        else:
+            template_values["message"] = "Please enter an artist to search."
+            print template_values["message"]
+        
+        template = JINJA_ENVIRONMENT.get_template('dawgtunes_content.html')
+        html = template.render(template_values)
+        self.response.write(html)
+        # fname = "dawgtunes_content.html"
+        # f = open(fname, 'w')
+        # f.write(html)
+        # f.close()
+
+application = webapp2.WSGIApplication([\
+                                    ('/', MainHandler),
+                                    ('/dawgtunes_content.html', CreateHandler),
+                                    ('/dawgtunes_request.html', PostHandler)
+                                    ], debug=True)

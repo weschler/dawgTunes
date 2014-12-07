@@ -1,5 +1,5 @@
 body{
-	background-color: black;
+	background-color: #202020;
 }
 h1{
 	font-size: 36pt;
@@ -48,4 +48,5 @@ a{
 }
 p{
 	color: white;
+	font-family: Calibri, Helvetica, Arial;
 }
